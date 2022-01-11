@@ -78,4 +78,36 @@ router.get("/", async (req, res, next) => {
   }
 });
 
+router.put("/update/", async(req, res, next) => {
+  try {
+    if (!req.user) {
+      return res.sendStatus(401);
+    }
+    const { conversationId } = req.body;
+    // console.log("update API ", conversationId, new Date());
+
+    let conversation = await Conversation.findOne({
+      where:{
+        id: conversationId
+      }
+    });
+
+    if(conversation.user1Id === req.user.id) {
+      conversation.user1Active = new Date();
+    }
+    else {
+      conversation.user2Active = new Date();
+    }
+
+    await conversation.save();
+
+    // console.log("Update Conversation", conversation)
+
+    res.sendStatus(200);
+
+  } catch (error) {
+    next(error);
+  }
+});
+
 module.exports = router;
