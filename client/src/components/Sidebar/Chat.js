@@ -1,5 +1,5 @@
 import React from "react";
-import { Box } from "@material-ui/core";
+import { Box, Badge } from "@material-ui/core";
 import { BadgeAvatar, ChatContent } from "../Sidebar";
 import { makeStyles } from "@material-ui/core/styles";
 import { setActiveChat } from "../../store/activeConversation";
@@ -23,13 +23,12 @@ const useStyles = makeStyles((theme) => ({
 const Chat = (props) => {
   const classes = useStyles();
   const { conversation } = props;
-  const { otherUser, userActive } = conversation;
+  const { otherUser, userActive, messages } = conversation;
 
   const unreadMsgs  = (() => {
     let count = 0;
     let datetime = moment(userActive);
-
-    conversation.messages.forEach((convo) => {
+    messages.forEach((convo) => {
       if(moment(convo.createdAt).isAfter(datetime)) {
         count++
       }
@@ -37,8 +36,6 @@ const Chat = (props) => {
 
     return count
   })();
-
-  console.log(unreadMsgs);
 
   const handleClick = async (conversation) => {
     await props.setActiveChat(conversation.otherUser.username);
@@ -53,6 +50,10 @@ const Chat = (props) => {
         sidebar={true}
       />
       <ChatContent conversation={conversation} unreadMsgs={unreadMsgs} />
+      <Badge
+        badgeContent={unreadMsgs}
+        color="primary"
+      />
     </Box>
   );
 };
