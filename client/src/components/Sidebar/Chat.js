@@ -27,14 +27,15 @@ const Chat = (props) => {
 
   const unreadMsgs  = (() => {
     let count = 0;
-    let datetime = moment(userActive);
+    // userActive time will be undefined for new convo
+    // subtracting 1 year from the date will ensure that the second if condition is met
+    let datetime = userActive ? moment(userActive) : moment().subtract(1, 'y');
     messages.forEach((convo) => {
       if(convo.senderId === otherUser.id && moment(convo.createdAt).isAfter(datetime)) {
-        count++
+        count++;
       }
     });
-
-    return count
+    return count;
   })();
 
   const handleClick = async (conversation) => {

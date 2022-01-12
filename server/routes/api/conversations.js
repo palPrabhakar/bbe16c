@@ -92,7 +92,6 @@ router.post("/update/", async(req, res, next) => {
       return res.sendStatus(401);
     }
     const { conversationId } = req.body;
-    // console.log("update API ", conversationId, new Date());
 
     let conversation = await Conversation.findOne({
       where:{
@@ -106,7 +105,9 @@ router.post("/update/", async(req, res, next) => {
     else {
       conversation.user2Active = new Date();
     }
+
     await conversation.save();
+
     if(conversation.user1Id === req.user.id) {
       res.json({id: conversationId, userActive: conversation.user1Active, otherUserActive: conversation.user2Active});
     }

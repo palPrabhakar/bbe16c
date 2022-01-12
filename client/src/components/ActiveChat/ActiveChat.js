@@ -23,14 +23,14 @@ const useStyles = makeStyles(() => ({
 
 const ActiveChat = (props) => {
   const classes = useStyles();
-  const { user , updateConversations} = props;
+  const { user , updateConversations } = props;
   const conversation = props.conversation || {};
-  // For now
+
   useEffect(() => {
     if(conversation.id) {
       updateConversations({ conversationId: conversation.id });
     }
-  }, [conversation.id]);
+  }, [conversation.id, updateConversations]);
 
   return (
     <Box className={classes.root}>
