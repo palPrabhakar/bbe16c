@@ -29,7 +29,7 @@ const Chat = (props) => {
     let count = 0;
     let datetime = moment(userActive);
     messages.forEach((convo) => {
-      if(moment(convo.createdAt).isAfter(datetime)) {
+      if(convo.senderId === otherUser.id && moment(convo.createdAt).isAfter(datetime)) {
         count++
       }
     });
