@@ -18,7 +18,7 @@ router.get("/", async (req, res, next) => {
           user2Id: userId,
         },
       },
-      attributes: ["id"],
+      attributes: ["id", "user1Active", "user2Active"],
       order: [[Message, "createdAt", "DESC"]],
       include: [
         { model: Message, order: ["createdAt", "DESC"] },
@@ -54,10 +54,18 @@ router.get("/", async (req, res, next) => {
       // set a property "otherUser" so that frontend will have easier access
       if (convoJSON.user1) {
         convoJSON.otherUser = convoJSON.user1;
+        convoJSON.userActive = convoJSON.user2Active;
+        convoJSON.otherUserActive = convoJSON.user1Active;
         delete convoJSON.user1;
+        delete convoJSON.user1Active;
+        delete convoJSON.user2Active;
       } else if (convoJSON.user2) {
         convoJSON.otherUser = convoJSON.user2;
+        convoJSON.userActive = convoJSON.user1Active;
+        convoJSON.otherUserActive = convoJSON.user2Active;
         delete convoJSON.user2;
+        delete convoJSON.user1Active;
+        delete convoJSON.user2Active;
       }
 
       // set property for online status of the other user
@@ -78,7 +86,7 @@ router.get("/", async (req, res, next) => {
   }
 });
 
-router.put("/update/", async(req, res, next) => {
+router.post("/update/", async(req, res, next) => {
   try {
     if (!req.user) {
       return res.sendStatus(401);
@@ -98,13 +106,13 @@ router.put("/update/", async(req, res, next) => {
     else {
       conversation.user2Active = new Date();
     }
-
     await conversation.save();
-
-    // console.log("Update Conversation", conversation)
-
-    res.sendStatus(200);
-
+    if(conversation.user1Id === req.user.id) {
+      res.json({id: conversationId, userActive: conversation.user1Active, otherUserActive: conversation.user2Active});
+    }
+    else {
+      res.json({id: conversationId, otherUserActive: conversation.user1Active, userActive: conversation.user2Active});
+    }
   } catch (error) {
     next(error);
   }

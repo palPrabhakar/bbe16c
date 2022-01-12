@@ -4,6 +4,7 @@ import { BadgeAvatar, ChatContent } from "../Sidebar";
 import { makeStyles } from "@material-ui/core/styles";
 import { setActiveChat } from "../../store/activeConversation";
 import { connect } from "react-redux";
+import moment from "moment";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -22,7 +23,22 @@ const useStyles = makeStyles((theme) => ({
 const Chat = (props) => {
   const classes = useStyles();
   const { conversation } = props;
-  const { otherUser } = conversation;
+  const { otherUser, userActive } = conversation;
+
+  const unreadMsgs  = (() => {
+    let count = 0;
+    let datetime = moment(userActive);
+
+    conversation.messages.forEach((convo) => {
+      if(moment(convo.createdAt).isAfter(datetime)) {
+        count++
+      }
+    });
+
+    return count
+  })();
+
+  console.log(unreadMsgs);
 
   const handleClick = async (conversation) => {
     await props.setActiveChat(conversation.otherUser.username);
@@ -36,7 +52,7 @@ const Chat = (props) => {
         online={otherUser.online}
         sidebar={true}
       />
-      <ChatContent conversation={conversation} />
+      <ChatContent conversation={conversation} unreadMsgs={unreadMsgs} />
     </Box>
   );
 };

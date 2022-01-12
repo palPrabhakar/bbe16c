@@ -80,3 +80,16 @@ export const addNewConvoToStore = (state, recipientId, message) => {
     }
   });
 };
+
+export const updateActiveTime = (state, data) => {
+  return state.map((convo) => {
+    if (convo.id === data.id) {
+      const convoCopy = { ...convo };
+      convoCopy.userActive = data.userActive;
+      convoCopy.otherUserActive = data.otherUserActive;
+      return convoCopy;
+    } else {
+      return convo;
+    }
+  });
+};
