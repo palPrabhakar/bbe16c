@@ -5,6 +5,7 @@ const onlineUsers = require("../../onlineUsers");
 
 // get all conversations for a user, include latest message text for preview, and all messages
 // include other user model so we have info on username/profile pic (don't include current user info)
+// This needs to change!
 router.get("/", async (req, res, next) => {
   try {
     if (!req.user) {
@@ -47,6 +48,8 @@ router.get("/", async (req, res, next) => {
       ],
     });
 
+    // This needs to change
+    // otherUser now an array of users
     for (let i = 0; i < conversations.length; i++) {
       const convo = conversations[i];
       const convoJSON = convo.toJSON();

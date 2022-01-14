@@ -1,6 +1,8 @@
 export const addMessageToStore = (state, payload) => {
   const { message, sender } = payload;
   // if sender isn't null, that means the message needs to be put in a brand new convo
+  // This is through socket
+  // This will need to change in case of group convo
   if (sender !== null) {
     const newConvo = {
       id: message.conversationId,
@@ -67,6 +69,7 @@ export const addSearchedUsersToStore = (state, users) => {
   return newState;
 };
 
+// This will change
 export const addNewConvoToStore = (state, recipientId, message) => {
   return state.map((convo) => {
     if (convo.otherUser.id === recipientId) {
