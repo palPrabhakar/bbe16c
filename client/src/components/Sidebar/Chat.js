@@ -3,6 +3,7 @@ import { Box, Badge } from "@material-ui/core";
 import { BadgeAvatar, ChatContent } from "../Sidebar";
 import { makeStyles } from "@material-ui/core/styles";
 import { setActiveChat } from "../../store/activeConversation";
+import { updateConversations } from "../../store/utils/thunkCreators";
 import { connect } from "react-redux";
 import moment from "moment";
 
@@ -22,14 +23,17 @@ const useStyles = makeStyles((theme) => ({
 
 const Chat = (props) => {
   const classes = useStyles();
-  const { conversation, activeConversation } = props;
+  const { conversation, activeConversation, updateConversations } = props;
   const { otherUser, userActive, messages } = conversation;
 
   const [ unreadMsgs, setUnreadMsgs ] = useState(0);
 
   useEffect(() => {
     if(activeConversation === otherUser.username) {
+      // console.log("use Effect in sidebar\n");
       setUnreadMsgs(0);
+      updateConversations({conversationId: conversation.id});
+
     } else {
       const msgs  = (() => {
         let count = 0;
@@ -45,7 +49,7 @@ const Chat = (props) => {
       })();
       setUnreadMsgs(msgs);
     }
-  }, [messages, otherUser.id, userActive, activeConversation, otherUser.username]);
+  }, [messages, otherUser.id, activeConversation, otherUser.username, conversation.id]);
 
 
   const handleClick = async (conversation) => {
@@ -64,6 +68,7 @@ const Chat = (props) => {
       <Badge
         badgeContent={unreadMsgs}
         color="primary"
+        anchorOrigin={{ horizontal: "left", vertical: "bottom" }}
       />
     </Box>
   );
@@ -73,7 +78,10 @@ const mapDispatchToProps = (dispatch) => {
   return {
     setActiveChat: (id) => {
       dispatch(setActiveChat(id));
-    }
+    },
+    updateConversations: (data) => {
+      dispatch(updateConversations(data));
+    },
   };
 };
 
