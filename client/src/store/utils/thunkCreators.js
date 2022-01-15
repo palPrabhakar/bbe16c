@@ -81,7 +81,7 @@ export const fetchConversations = () => async (dispatch) => {
 
 export const updateConversations = (body) => async (dispatch) => {
   try {
-    const { data } = await axios.post("/api/conversations/update/", body);
+    const { data } = await axios.put("/api/conversations/updateTime/", body);
     dispatch(gotUpdateConversations(data));
   } catch (error) {
     console.error(error);

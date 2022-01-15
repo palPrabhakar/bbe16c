@@ -29,6 +29,9 @@ const ActiveChat = (props) => {
   useEffect(() => {
     if(conversation.id) {
       updateConversations({ conversationId: conversation.id });
+      return function updateTimeBeforeLeaving() {
+        updateConversations({ conversationId: conversation.id });
+      }
     }
   }, [conversation.id, updateConversations]);
 

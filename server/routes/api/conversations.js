@@ -86,7 +86,7 @@ router.get("/", async (req, res, next) => {
   }
 });
 
-router.post("/update/", async(req, res, next) => {
+router.put("/updateTime/", async(req, res, next) => {
   try {
     if (!req.user) {
       return res.sendStatus(401);

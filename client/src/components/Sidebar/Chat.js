@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Box, Badge } from "@material-ui/core";
 import { BadgeAvatar, ChatContent } from "../Sidebar";
 import { makeStyles } from "@material-ui/core/styles";
@@ -22,21 +22,31 @@ const useStyles = makeStyles((theme) => ({
 
 const Chat = (props) => {
   const classes = useStyles();
-  const { conversation } = props;
+  const { conversation, activeConversation } = props;
   const { otherUser, userActive, messages } = conversation;
 
-  const unreadMsgs  = (() => {
-    let count = 0;
-    // userActive time will be undefined for new convo
-    // subtracting 1 year from the date will ensure that the second if condition is met
-    let datetime = userActive ? moment(userActive) : moment().subtract(1, 'y');
-    messages.forEach((convo) => {
-      if(convo.senderId === otherUser.id && moment(convo.createdAt).isAfter(datetime)) {
-        count++;
-      }
-    });
-    return count;
-  })();
+  const [ unreadMsgs, setUnreadMsgs ] = useState(0);
+
+  useEffect(() => {
+    if(activeConversation === otherUser.username) {
+      setUnreadMsgs(0);
+    } else {
+      const msgs  = (() => {
+        let count = 0;
+        // userActive time will be undefined for new convo
+        // subtracting 1 year from the date will ensure that the second if condition is met
+        let datetime = userActive ? moment(userActive) : moment().subtract(1, 'y');
+        messages.forEach((convo) => {
+          if(convo.senderId === otherUser.id && moment(convo.createdAt).isAfter(datetime)) {
+            count++;
+          }
+        });
+        return count;
+      })();
+      setUnreadMsgs(msgs);
+    }
+  }, [messages, otherUser.id, userActive, activeConversation, otherUser.username]);
+
 
   const handleClick = async (conversation) => {
     await props.setActiveChat(conversation.otherUser.username);
