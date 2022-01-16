@@ -25,6 +25,7 @@ export const addMessageToStore = (state, payload) => {
   });
 };
 
+// Change
 export const addOnlineUserToStore = (state, id) => {
   return state.map((convo) => {
     if (convo.otherUser.id === id) {
@@ -37,6 +38,7 @@ export const addOnlineUserToStore = (state, id) => {
   });
 };
 
+// Change
 export const removeOfflineUserFromStore = (state, id) => {
   return state.map((convo) => {
     if (convo.otherUser.id === id) {
