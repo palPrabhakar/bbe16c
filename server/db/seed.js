@@ -24,8 +24,8 @@ async function seed() {
   });
 
   const santaigoConvo = await Conversation.create({
-    user1Id: thomas.id,
-    user2Id: santiago.id,
+    // user1Id: thomas.id,
+    // user2Id: santiago.id,
   });
 
   await Message.create({
@@ -52,8 +52,8 @@ async function seed() {
       "https://res.cloudinary.com/dmlvthmqr/image/upload/v1607914468/messenger/8bc2e13b8ab74765fd57f0880f318eed1c3fb001_fownwt.png",
   });
   const chiumboConvo = await Conversation.create({
-    user1Id: chiumbo.id,
-    user2Id: thomas.id,
+    // user1Id: chiumbo.id,
+    // user2Id: thomas.id,
   });
   await Message.create({
     conversationId: chiumboConvo.id,
@@ -69,8 +69,8 @@ async function seed() {
       "https://res.cloudinary.com/dmlvthmqr/image/upload/v1607914466/messenger/6c4faa7d65bc24221c3d369a8889928158daede4_vk5tyg.png",
   });
   const hualingConvo = await Conversation.create({
-    user2Id: hualing.id,
-    user1Id: thomas.id,
+    // user2Id: hualing.id,
+    // user1Id: thomas.id,
   });
 
   for (let i = 0; i < 11; i++) {

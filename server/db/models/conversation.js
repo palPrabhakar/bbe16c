@@ -2,10 +2,16 @@ const { Op } = require("sequelize");
 const db = require("../db");
 const Message = require("./message");
 
-const Conversation = db.define("conversation", {});
+// To store the name of the group conversation
+const Conversation = db.define("conversation", {
+  name: {
+    type: Sequelize.STRING,
+  }
+});
 
 // find conversation given two user Ids
 
+// This will need to change
 Conversation.findConversation = async function (user1Id, user2Id) {
   const conversation = await Conversation.findOne({
     where: {
