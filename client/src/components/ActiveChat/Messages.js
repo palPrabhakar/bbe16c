@@ -9,7 +9,7 @@ const Messages = (props) => {
   const [idx, updateIndex ] = useState(-1);
 
   useEffect(() => {
-    let ut = moment(otherUserActiveTime)
+    let ut = otherUserActiveTime ?  moment(otherUserActiveTime) : moment().subtract(1, 'y');
     for(let i = messages.length-1; i >= 0; --i) {
       const mt = moment(messages[i].createdAt)
       if (messages[i].senderId === userId && ut.isAfter(mt)) {

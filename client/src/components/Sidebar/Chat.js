@@ -18,7 +18,11 @@ const useStyles = makeStyles((theme) => ({
     "&:hover": {
       cursor: "grab"
     }
-  }
+  },
+  badgeBox: {
+    width: 20,
+    height: 20,
+  },
 }));
 
 const Chat = (props) => {
@@ -30,10 +34,8 @@ const Chat = (props) => {
 
   useEffect(() => {
     if(activeConversation === otherUser.username) {
-      // console.log("use Effect in sidebar\n");
       setUnreadMsgs(0);
       updateConversations({conversationId: conversation.id});
-
     } else {
       const msgs  = (() => {
         let count = 0;
@@ -65,11 +67,13 @@ const Chat = (props) => {
         sidebar={true}
       />
       <ChatContent conversation={conversation} unreadMsgs={unreadMsgs} />
+      <Box className={classes.badgeBox}>
       <Badge
         badgeContent={unreadMsgs}
         color="primary"
-        anchorOrigin={{ horizontal: "left", vertical: "bottom" }}
+        anchorOrigin={{ horizontal: "right", vertical: "top" }}
       />
+      </Box>
     </Box>
   );
 };
