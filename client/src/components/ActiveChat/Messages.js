@@ -6,18 +6,18 @@ import moment from "moment";
 
 const Messages = (props) => {
   const { messages, otherUser, userId, otherUserActiveTime } = props;
-  const [idx, updateIndex ] = useState(-1);
+  const [idx, setIdx ] = useState(-1);
 
   useEffect(() => {
-    let ut = otherUserActiveTime ?  moment(otherUserActiveTime) : moment().subtract(1, 'y');
+    let userTime = otherUserActiveTime ?  moment(otherUserActiveTime) : moment().subtract(1, 'y');
     for(let i = messages.length-1; i >= 0; --i) {
-      const mt = moment(messages[i].createdAt)
-      if (messages[i].senderId === userId && ut.isAfter(mt)) {
-        updateIndex(i);
+      const msgTime = moment(messages[i].createdAt)
+      if (messages[i].senderId === userId && userTime.isAfter(msgTime)) {
+        setIdx(i);
         break;
       }
-      else if (messages[i].senderId !== userId && mt.isAfter(ut)) {
-        ut = mt;
+      else if (messages[i].senderId !== userId && msgTime.isAfter(userTime)) {
+        userTime = msgTime;
       }
     }
   }, [messages, userId, otherUserActiveTime]);
