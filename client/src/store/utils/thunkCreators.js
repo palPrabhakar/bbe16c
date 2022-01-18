@@ -5,6 +5,7 @@ import {
   addConversation,
   setNewMessage,
   setSearchedUsers,
+  gotUpdateConversations
 } from "../conversations";
 import { gotUser, setFetchingStatus } from "../user";
 
@@ -77,6 +78,16 @@ export const fetchConversations = () => async (dispatch) => {
     console.error(error);
   }
 };
+
+export const updateConversations = (body) => async (dispatch) => {
+  try {
+    const { data } = await axios.put("/api/conversations/updateTime/", body);
+    dispatch(gotUpdateConversations(data));
+  } catch (error) {
+    console.error(error);
+  }
+};
+
 
 const saveMessage = async (body) => {
   const { data } = await axios.post("/api/messages", body);

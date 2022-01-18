@@ -1,9 +1,11 @@
-import React from "react";
-import { Box } from "@material-ui/core";
+import React, { useEffect, useState } from "react";
+import { Box, Badge } from "@material-ui/core";
 import { BadgeAvatar, ChatContent } from "../Sidebar";
 import { makeStyles } from "@material-ui/core/styles";
 import { setActiveChat } from "../../store/activeConversation";
+import { updateConversations } from "../../store/utils/thunkCreators";
 import { connect } from "react-redux";
+import moment from "moment";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -16,13 +18,41 @@ const useStyles = makeStyles((theme) => ({
     "&:hover": {
       cursor: "grab"
     }
-  }
+  },
+  badgeBox: {
+    width: 20,
+    height: 20,
+  },
 }));
 
 const Chat = (props) => {
   const classes = useStyles();
-  const { conversation } = props;
-  const { otherUser } = conversation;
+  const { conversation, activeConversation, updateConversations } = props;
+  const { otherUser, userActive, messages } = conversation;
+
+  const [ unreadMsgs, setUnreadMsgs ] = useState(0);
+
+  useEffect(() => {
+    if(activeConversation === otherUser.username) {
+      setUnreadMsgs(0);
+      updateConversations({conversationId: conversation.id});
+    } else {
+      const msgs  = (() => {
+        let count = 0;
+        // userActive time will be undefined for new convo
+        // subtracting 1 year from the date will ensure that the second if condition is met
+        let datetime = userActive ? moment(userActive) : moment().subtract(1, 'y');
+        messages.forEach((convo) => {
+          if(convo.senderId === otherUser.id && moment(convo.createdAt).isAfter(datetime)) {
+            count++;
+          }
+        });
+        return count;
+      })();
+      setUnreadMsgs(msgs);
+    }
+  }, [messages, otherUser.id, activeConversation, otherUser.username, conversation.id]);
+
 
   const handleClick = async (conversation) => {
     await props.setActiveChat(conversation.otherUser.username);
@@ -36,7 +66,14 @@ const Chat = (props) => {
         online={otherUser.online}
         sidebar={true}
       />
-      <ChatContent conversation={conversation} />
+      <ChatContent conversation={conversation} unreadMsgs={unreadMsgs} />
+      <Box className={classes.badgeBox}>
+      <Badge
+        badgeContent={unreadMsgs}
+        color="primary"
+        anchorOrigin={{ horizontal: "right", vertical: "top" }}
+      />
+      </Box>
     </Box>
   );
 };
@@ -45,7 +82,10 @@ const mapDispatchToProps = (dispatch) => {
   return {
     setActiveChat: (id) => {
       dispatch(setActiveChat(id));
-    }
+    },
+    updateConversations: (data) => {
+      dispatch(updateConversations(data));
+    },
   };
 };
 
